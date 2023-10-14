@@ -27,7 +27,7 @@ import java.io.IOException
 class MarsViewModel : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     sealed interface MarsUiState {
-        data class Success(val photos: Unit) : MarsUiState
+        data class Success(val photos: String) : MarsUiState
         object Error : MarsUiState
         object Loading : MarsUiState
     }
@@ -50,7 +50,9 @@ class MarsViewModel : ViewModel() {
         try {
             viewModelScope.launch {
                 val listResult = MarsApi.retrofitService.getPhotos()
-                marsUiState = MarsUiState.Success(listResult)
+                marsUiState = MarsUiState.Success(
+                    "Success: ${listResult.size} Mars photos retrieved"
+                )
             }
         } catch (e: IOException) {
             MarsUiState.Error
